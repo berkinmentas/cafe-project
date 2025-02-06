@@ -6,10 +6,10 @@
     <title>@yield('title', 'Cafe Menu')</title>
     @vite('resources/css/app.css')
 </head>
-<body class="bg-gray-50">
+<body class="bg-gray-50 min-h-screen flex flex-col">
 @include('components.nav')
 
-<main class="container mx-auto px-4 py-8">
+<main class="container mx-auto px-4 py-8 my-8">
     @yield('content')
 </main>
 

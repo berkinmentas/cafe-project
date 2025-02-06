@@ -6,7 +6,6 @@
             </a>
             <div class="flex items-center space-x-4">
                 <a href="/" class="text-gray-700 hover:text-gray-900">Ana Sayfa</a>
-                <a href="#" class="text-gray-700 hover:text-gray-900">Hakkımızda</a>
             </div>
         </div>
     </div>

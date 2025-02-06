@@ -10,7 +10,8 @@ return new class extends Migration
     {
         if (!Schema::hasColumn('products', 'user_id')) {
             Schema::table('products', function (Blueprint $table) {
-                $table->foreignId('user_id')->constrained();
+                $table->foreignId('user_id')->constrained('admins')
+                ;
             });
         }
     }

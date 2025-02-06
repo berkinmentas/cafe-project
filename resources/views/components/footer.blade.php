@@ -1,4 +1,4 @@
-<footer class="bg-white border-t mt-12">
+<footer class="bg-white border-t mt-auto w-full">
     <div class="container mx-auto px-4 py-8">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div>
@@ -8,7 +8,7 @@
             <div>
                 <h3 class="font-semibold text-lg mb-4">İletişim</h3>
                 <ul class="text-gray-600 space-y-2">
-                    <li>Email: berkinmentas@gmail.com</li>
+                    <li>berkinmentas@gmail.com</li>
                 </ul>
             </div>
             <div>
