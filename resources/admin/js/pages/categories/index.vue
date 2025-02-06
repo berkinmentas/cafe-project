@@ -55,75 +55,24 @@
         </table>
       </div>
     </div>
-
-    <!-- Kategori Modal -->
-    <Modal v-model="showModal">
-      <template #title>
-        {{ isEditing ? 'Kategori Düzenle' : 'Yeni Kategori' }}
-      </template>
-      
-      <template #content>
-        <form @submit.prevent="handleSubmit" class="space-y-4">
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Başlık</label>
-            <input 
-              v-model="form.title"
-              type="text"
-              class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700">Görsel</label>
-            <ImageUpload 
-              v-model="form.image"
-              :preview-url="form.image_url"
-            />
-          </div>
-        </form>
-      </template>
-    </Modal>
   </div>
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue'
-import { useCategoryStore } from '../stores/category'
-import Modal from '../components/Modal.vue'
-import ImageUpload from '../components/ImageUpload.vue'
-import { useToast } from '../composables/useToast'
+import { useCategoryStore } from '../../stores/category'
+import { useToast } from '../../composables/useToast'
 
 const categoryStore = useCategoryStore()
 const toast = useToast()
-
 const categories = ref([])
-const showModal = ref(false)
-const isEditing = ref(false)
-const form = ref({
-  title: '',
-  image: null,
-  image_url: ''
-})
 
-const openCreateModal = () => {
-  isEditing.value = false
-  form.value = {
-    title: '',
-    image: null,
-    image_url: ''
+const loadCategories = async () => {
+  try {
+    categories.value = await categoryStore.fetchCategories()
+  } catch (error) {
+    toast.error('Kategoriler yüklenirken bir hata oluştu')
   }
-  showModal.value = true
-}
-
-const handleEdit = (category) => {
-  isEditing.value = true
-  form.value = {
-    id: category.id,
-    title: category.title,
-    image: null,
-    image_url: category.image_url
-  }
-  showModal.value = true
 }
 
 const handleDelete = async (id) => {
@@ -136,33 +85,7 @@ const handleDelete = async (id) => {
   }
 }
 
-// Kategorileri yükle
-const loadCategories = async () => {
-  try {
-    categories.value = await categoryStore.fetchCategories()
-  } catch (error) {
-    toast.error('Kategoriler yüklenirken bir hata oluştu')
-  }
-}
-
-// Form işlemleri
-const handleSubmit = async () => {
-  try {
-    if (isEditing.value) {
-      await categoryStore.updateCategory(form.value)
-      toast.success('Kategori başarıyla güncellendi')
-    } else {
-      await categoryStore.createCategory(form.value)
-      toast.success('Kategori başarıyla oluşturuldu')
-    }
-    showModal.value = false
-    loadCategories()
-  } catch (error) {
-    toast.error('Bir hata oluştu')
-  }
-}
-
 onMounted(() => {
   loadCategories()
 })
-</script>
+</script> 

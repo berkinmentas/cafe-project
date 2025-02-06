@@ -16,14 +16,14 @@ class ProductController extends Controller
     public function index(): JsonResponse
     {
         try {
-            $products = Product::query()
-                ->with(['categories:id,title,slug'])
+            $products = Product::with(['categories:id,title,slug'])
+                ->where('user_id', auth()->id())
                 ->latest()
                 ->get();
 
-            return ApiResponse::success($products, 'Products successfully fetched');
+            return ApiResponse::success($products, 'Products fetched');
         } catch (Exception $e) {
-            return ApiResponse::error('Products not be fetched', 500, $e->getMessage());
+            return ApiResponse::error('Error fetching products', 500, $e->getMessage());
         }
     }
 
@@ -43,11 +43,12 @@ class ProductController extends Controller
                 return ApiResponse::error('Validation failed', 422, $validator->errors());
             }
 
-            $product = Product::query()->create([
+            $product = Product::create([
                 'title' => $request->title,
                 'slug' => Str::slug($request->title),
                 'description' => $request->description,
-                'price' => $request->price
+                'price' => $request->price,
+                'user_id' => auth()->id()
             ]);
 
             if ($request->hasFile('image')) {
@@ -56,33 +57,35 @@ class ProductController extends Controller
             }
 
             $product->categories()->attach($request->categories);
-
             $product->load(['categories:id,title']);
 
-            return ApiResponse::success($product, 'Product created successfully', 201);
+            return ApiResponse::success($product, 'Product created', 201);
         } catch (Exception $e) {
-            return ApiResponse::error('Failed to create product', 500, $e->getMessage());
+            return ApiResponse::error('Error creating product', 500, $e->getMessage());
         }
     }
 
     public function show(Product $product): JsonResponse
     {
         try {
-            $product->load(['categories:id,title']);
+            if ($product->user_id !== auth()->id()) {
+                return ApiResponse::error('Unauthorized', 403);
+            }
 
-            return ApiResponse::success($product, 'Product successfully fetched');
+            $product->load(['categories:id,title']);
+            return ApiResponse::success($product, 'Product fetched');
         } catch (Exception $e) {
-            return ApiResponse::error('Product not be fetched.', 500, $e->getMessage());
+            return ApiResponse::error('Error fetching product', 500, $e->getMessage());
         }
     }
 
     public function update(Request $request, $id): JsonResponse
     {
         try {
-            $product = Product::query()->find($id);
+            $product = Product::find($id);
 
-            if (!$product) {
-                return ApiResponse::error('Product not found with ID', 404);
+            if (!$product || $product->user_id !== auth()->id()) {
+                return ApiResponse::error('Product not found', 404);
             }
 
             $validator = Validator::make($request->all(), [
@@ -112,32 +115,28 @@ class ProductController extends Controller
             }
 
             $product->categories()->sync($request->categories);
-
             $product->load('categories:id,title');
 
-            return ApiResponse::success($product, 'Product updated successfully');
+            return ApiResponse::success($product, 'Product updated');
         } catch (Exception $e) {
-            return ApiResponse::error('Failed to update product', 500, $e->getMessage());
+            return ApiResponse::error('Error updating product', 500, $e->getMessage());
         }
     }
 
     public function destroy(Product $product): JsonResponse
     {
         try {
-            $product->categories()->detach();
-            $product->delete();
-
-            if (!$product) {
-                return ApiResponse::error('Product not found with ID', 404);
+            if ($product->user_id !== auth()->id()) {
+                return ApiResponse::error('Unauthorized', 403);
             }
 
-            $product->clearMediaCollection('product_images');
             $product->categories()->detach();
+            $product->clearMediaCollection('product_images');
             $product->delete();
 
-            return ApiResponse::success(null, 'Product deleted successfully');
+            return ApiResponse::success(null, 'Product deleted');
         } catch (Exception $e) {
-            return ApiResponse::error('Failed to delete product', 500, $e->getMessage());
+            return ApiResponse::error('Error deleting product', 500, $e->getMessage());
         }
     }
 }

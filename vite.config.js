@@ -5,7 +5,14 @@ import path from 'node:path';
 
 export default defineConfig({
     plugins: [
-        vue(),
+        vue({
+            template: {
+                transformAssetUrls: {
+                    base: null,
+                    includeAbsolute: false,
+                },
+            },
+        }),
         laravel({
             input: [
                 'resources/css/app.css',
@@ -18,7 +25,8 @@ export default defineConfig({
     ],
     resolve: {
         alias: {
-            '@': path.resolve(__dirname, 'resources/js'),
+            '@': path.resolve(__dirname, 'resources/admin/js'),
+            '~': '/node_modules/'
         },
     },
 });

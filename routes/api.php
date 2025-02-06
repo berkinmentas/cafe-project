@@ -25,5 +25,9 @@ Route::prefix('admin')->group(function () {
         Route::post('products', [ProductController::class, 'store']);
         Route::put('products/{product}', [ProductController::class, 'update']);
         Route::delete('products/{product}', [ProductController::class, 'destroy']);
+
+        Route::get('check-auth', function () {
+            return response()->json(['status' => true]);
+        });
     });
 });

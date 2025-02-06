@@ -80,13 +80,23 @@ class AuthController extends Controller
 
             $tokens = $this->generateTokens($admin);
 
-            return ApiResponse::success([
-                'admin' => $admin->only(['id', 'name', 'email']),
-                ...$tokens
-            ], 'Login successful');
+            return response()->json([
+                'status' => true,
+                'message' => 'Login successful',
+                'data' => [
+                    'admin' => $admin->only(['id', 'name', 'email']),
+                    ...$tokens
+                ]
+            ])
+                ->header('Access-Control-Allow-Credentials', 'true')
+                ->header('Access-Control-Allow-Origin', $request->header('Origin'));
 
         } catch (Exception $e) {
-            return ApiResponse::error('Login failed', 500, $e->getMessage());
+            return response()->json([
+                'status' => false,
+                'message' => 'Login failed',
+                'error' => $e->getMessage()
+            ], 401);
         }
     }
 

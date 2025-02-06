@@ -1,22 +1,22 @@
 import '../css/app.css';
 import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import { createPinia } from 'pinia';
 import App from './App.vue';
-import Dashboard from './pages/Dashboard.vue';
-import Cafes from './pages/Cafes.vue';
-import Products from "./pages/Products.vue";
+import router from './router';
+import axios from 'axios';
 
-const routes = [
-    { path: '/', component: Dashboard },
-    { path: '/cafes', component: Cafes },
-    { path: '/products', component: Products },
-];
+axios.defaults.baseURL = 'http://127.0.0.1:8000';
+axios.defaults.headers.common['Accept'] = 'application/json';
+axios.defaults.headers.common['Content-Type'] = 'application/json';
 
-const router = createRouter({
-    history: createWebHistory('/admin'),
-    routes,
-});
+const token = localStorage.getItem('access_token');
+if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+}
 
 const app = createApp(App);
+const pinia = createPinia();
+
+app.use(pinia);
 app.use(router);
 app.mount('#app');
