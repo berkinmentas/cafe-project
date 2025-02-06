@@ -16,16 +16,11 @@ class AdminTokenMiddleware
             'api/admin/register',
             'api/admin/refresh-token',
             'admin/login',
-            'admin/register',
-            'admin/not-found',
+            'admin/register'
         ];
 
         if (!str_starts_with($request->path(), 'api/')) {
-            if(!in_array($request->path(), $publicRoutes)) {
-                return redirect("admin/not-found");
-            }else{
-                return $next($request);
-            }
+            return $next($request);
         }
 
         if (in_array($request->path(), $publicRoutes)) {
