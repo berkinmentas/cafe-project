@@ -1,6 +1,6 @@
 <template>
   <div class="space-y-2">
-    <div 
+    <div
       class="flex justify-center px-6 pt-5 pb-6 border-2 border-gray-200 border-dashed rounded-md hover:border-[#4F45E4]/50 transition-colors"
       @dragover.prevent
       @drop.prevent="handleDrop"
@@ -9,17 +9,17 @@
         <div v-if="loading" class="mb-4">
           <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-[#4F45E4] mx-auto"></div>
         </div>
-        
+
         <div v-else-if="previewImage" class="mb-4">
           <img :src="previewImage" class="mx-auto h-32 w-32 object-cover rounded" />
         </div>
-        
+
         <div class="flex text-sm text-gray-600">
           <label class="relative cursor-pointer bg-white rounded-md font-medium text-[#4F45E4] hover:text-[#4F45E4]/80">
             <span>Dosya Yükle</span>
-            <input 
-              type="file" 
-              class="sr-only" 
+            <input
+              type="file"
+              class="sr-only"
               accept="image/*"
               @change="handleFileChange"
               :disabled="loading"
@@ -79,17 +79,15 @@ const handleDrop = (event) => {
   }
 }
 
-// Eğer dışarıdan previewUrl değişirse güncelle
 watch(() => props.previewUrl, (newValue) => {
   if (newValue) {
     previewImage.value = newValue
   }
 }, { immediate: true })
 
-// Eğer modelValue değişirse ve dosya ise preview oluştur
 watch(() => props.modelValue, (newValue) => {
   if (newValue instanceof File) {
     createPreview(newValue)
   }
 })
-</script> 
+</script>

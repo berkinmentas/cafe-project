@@ -22,6 +22,12 @@ const routes = [
         meta: { requiresAuth: false }
     },
     {
+        path: '/admin/not-found',
+        name: 'not-found',
+        component: NotFound,
+        meta: { requiresAuth: false }
+    },
+    {
         path: '/admin',
         component: DashboardLayout,
         meta: { requiresAuth: true },
@@ -65,7 +71,7 @@ const routes = [
                 path: 'profile',
                 name: 'profile',
                 component: Profile
-            }
+            },
         ]
     },
     {

@@ -13,6 +13,10 @@ Route::prefix('admin')->group(function () {
         return view('admin');
     })->name('admin.register');
 
+    Route::get('/not-found', function () {
+        return view('admin');
+    })->name('admin.not-found');
+
     Route::middleware(['auth:admin'])->group(function () {
         Route::get('/{any?}', function () {
             return view('admin');

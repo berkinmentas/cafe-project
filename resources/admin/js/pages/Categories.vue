@@ -3,7 +3,7 @@
     <!-- Üst Başlık ve Aksiyon Alanı -->
     <div class="flex justify-between items-center">
       <h3 class="text-lg font-medium">Kategoriler</h3>
-      <router-link 
+      <router-link
         :to="{ name: 'categories.create' }"
         class="px-4 py-2 bg-[#4F45E4] text-white rounded-lg hover:bg-[#4F45E4]/90 transition-colors"
       >
@@ -26,8 +26,8 @@
           <tbody class="bg-white divide-y divide-gray-200">
             <tr v-for="category in categories" :key="category.id">
               <td class="px-6 py-4 whitespace-nowrap">
-                <img 
-                  :src="category.image_url" 
+                <img
+                  :src="category.image_url"
                   class="h-10 w-10 rounded-full object-cover"
                   alt="Kategori görseli"
                 />
@@ -36,13 +36,13 @@
               <td class="px-6 py-4 whitespace-nowrap">{{ category.slug }}</td>
               <td class="px-6 py-4 whitespace-nowrap">
                 <div class="flex space-x-2">
-                  <router-link 
+                  <router-link
                     :to="{ name: 'categories.edit', params: { id: category.id }}"
                     class="text-[#4F45E4] hover:text-[#4F45E4]/80"
                   >
                     Düzenle
                   </router-link>
-                  <button 
+                  <button
                     @click="handleDelete(category.id)"
                     class="text-red-600 hover:text-red-800"
                   >
@@ -61,12 +61,12 @@
       <template #title>
         {{ isEditing ? 'Kategori Düzenle' : 'Yeni Kategori' }}
       </template>
-      
+
       <template #content>
         <form @submit.prevent="handleSubmit" class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700">Başlık</label>
-            <input 
+            <input
               v-model="form.title"
               type="text"
               class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
@@ -75,7 +75,7 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700">Görsel</label>
-            <ImageUpload 
+            <ImageUpload
               v-model="form.image"
               :preview-url="form.image_url"
             />
@@ -136,7 +136,6 @@ const handleDelete = async (id) => {
   }
 }
 
-// Kategorileri yükle
 const loadCategories = async () => {
   try {
     categories.value = await categoryStore.fetchCategories()
@@ -145,7 +144,6 @@ const loadCategories = async () => {
   }
 }
 
-// Form işlemleri
 const handleSubmit = async () => {
   try {
     if (isEditing.value) {

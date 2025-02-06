@@ -11,7 +11,6 @@
 
 <script setup>
 import { ref } from 'vue';
-// CSS import'unu kaldıralım
 // import 'vue3-dropzone/dist/vue3-dropzone.css'
 import Dropzone from 'vue3-dropzone'
 
